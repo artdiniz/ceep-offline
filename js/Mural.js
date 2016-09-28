@@ -1,15 +1,10 @@
-const Mural = (function(LoginUsuario){
+const Mural = (function(){
 
     let cartoes = []
 
     function adiciona(cartao){
-        if(LoginUsuario.logado()){
-            cartoes.push(cartao)
-            cartao.colocaEm(".mural")
-            return true;
-        } else {
-            return false;
-        }
+        cartoes.push(cartao)
+        cartao.colocaEm(".mural")
     }
 
     function filtraCartoes({texto, tags}){
@@ -63,4 +58,4 @@ const Mural = (function(LoginUsuario){
             ,value: () => cartoes.filter(cartao => !cartao.getState().deleted)
         }
     })
-})(LoginUsuario)
+})()
