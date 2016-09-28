@@ -61,12 +61,12 @@ const LoginUsuario_render = (function($){
 
     function login(props){
         if(props.validacao && props.validacao(props.usuario) || !props.validacao && true){
-            props.onLogin(props.usuario)
+            props.onLogin && props.onLogin(props.usuario)
             clean()
             $loginStatus = new $LoginStatus(props.usuario)
             $loginStatus.on("sair", function(){
                 logout(props)
-                props.onLogout()
+                props.onLogout && props.onLogout()
             })
             $loginStatus.appendTo(".login")
         } else {
