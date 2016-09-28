@@ -54,29 +54,49 @@ const LoginUsuario_render = (function($){
     let $loginForm
     let $loginStatus
 
-    return function(props){
+    function clean(){
         $loginForm && $loginForm.remove()
         $loginStatus && $loginStatus.remove()
-        if(props.logado){
+    }
+
+    function login(props){
+        if(props.validacao && props.validacao(props.usuario) || !props.validacao && true){
+            props.onLogin(props.usuario)
+            clean()
             $loginStatus = new $LoginStatus(props.usuario)
             $loginStatus.on("sair", function(){
+                logout(props)
                 props.onLogout()
             })
             $loginStatus.appendTo(".login")
         } else {
-            $loginForm = new $LoginForm();
-            $loginForm.one("submit", function(event){
-                event.preventDefault()
-                let usuarioDigitado = $loginForm
-                                        .find("input")
-                                        .val()
-                                        .trim()
-                if(usuarioDigitado){
-                    props.onLogin(usuarioDigitado)
-                }
-            })
-            $loginForm.appendTo(".login")
-            $loginForm.find("input").focus()
+            logout(props)
+        }
+    }
+
+    function logout(props){
+        clean()
+        $loginForm = new $LoginForm();
+        $loginForm.on("submit", function(event){
+            event.preventDefault()
+            let usuarioDigitado = $loginForm
+                                    .find("input")
+                                    .val()
+                                    .trim()
+            if(usuarioDigitado){
+                props.usuario = usuarioDigitado
+                login(props)
+            }
+        })
+        $loginForm.appendTo(".login")
+        $loginForm.find("input").focus()
+    }
+
+    return function(props){
+        if(props.logado){
+            login(props)
+        } else {
+            logout(props)
         }
     }
 })(jQuery)
