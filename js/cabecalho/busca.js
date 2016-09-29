@@ -1,9 +1,12 @@
-(function($, Mural, Tags){
+const Busca = (function($, Mural, Tags){
 	"use strict"
 
+	let buscaTags = [];
+	let buscaTxt = "";
+
 	$("#busca").on("input", function(){
-		let buscaTags = Tags.extraiTags($(this).val())
-		let buscaTxt = $(this).val().split(" ").filter(function(palavra){
+		buscaTags = Tags.extraiTags($(this).val())
+		buscaTxt = $(this).val().split(" ").filter(function(palavra){
 			return buscaTags.indexOf(palavra) < 0
 		}).join(" ")
 
@@ -31,5 +34,11 @@
 				return true
 			}
 		})
+
+	})
+
+	return Object.seal({
+		tags: () => buscaTags
+		,texto: () => buscaTxt
 	})
 })(jQuery, Mural, Tags)

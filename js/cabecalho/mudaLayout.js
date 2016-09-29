@@ -1,15 +1,15 @@
 (function($){
 	"use strict"
 
-	document.querySelector("#mudaLayout").addEventListener("click", function(){
-		let mural = document.querySelector(".mural")
+	$("#mudaLayout").on("click", function(){
+		let mural = $(".mural")
 
-		mural.classList.toggle("muralLinha")
+		mural.toggleClass("muralLinha")
 
-		if(mural.classList.contains("muralLinha")){
-			this.textContent = "Blocos"
+		if(mural.hasClass("muralLinha")){
+			$(this).text("Blocos")
 		} else {
-			this.textContent = "Linhas"
+			$(this).text("Linhas")
 		}
 	})
 })(jQuery)

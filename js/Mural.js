@@ -6,6 +6,7 @@ const Mural = (function(){
     function adiciona(cartao){
         cartoes.push(cartao)
         cartao.colocaEm(".mural")
+        return true;
     }
 
     function filtraCartoes(filtro){

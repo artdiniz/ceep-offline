@@ -8,7 +8,7 @@ const Tags = (function(){
         }, [])
 	}
 
-    return {
+    return Object.seal({
         extraiTags: extraiTags 
-    }
+    })
 })()

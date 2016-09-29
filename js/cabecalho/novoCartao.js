@@ -1,4 +1,4 @@
-(function($, Mural, Cartao){
+(function($, Mural, Cartao, Tags, Busca){
 	"use strict"
 
 	$(".novoCartao").submit(function(event){
@@ -13,12 +13,6 @@
 		}
 	})
 
-	let tagsPadrao = []
-
-	$(".novoCartao").on("adicionaTagPadrao", function(event, tagsNovas){
-		tagsPadrao = tagsNovas
-	})
-
 	$(".novoCartao-conteudo").on("focus", function(){
 		let $campoConteudo = $(this)
 		let tagsAntigas = Tags.extraiTags($campoConteudo.val())
@@ -26,9 +20,9 @@
 			return palavra && tagsAntigas.indexOf(palavra) >= 0
 		}).join("|")
 		let txt = $campoConteudo.val().replace(new RegExp(tagsToRemoveRegex,"g"), "").trim()
-		let tags = tagsPadrao.reduce(function(txt,tag){
+		let tags = Busca.tags().reduce(function(txt,tag){
 			return txt + "\n" + tag
 		},"")
 		$campoConteudo.val(tags && (txt + "\n" + tags))
 	})
-})(jQuery, Mural, Cartao, Tags)
+})(jQuery, Mural, Cartao, Tags, Busca)
