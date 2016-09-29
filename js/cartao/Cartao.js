@@ -1,4 +1,4 @@
-const Cartao = (function($, _){
+const Cartao = (function($, $Cartao_Opcoes, $Cartao_Conteudo){
     "use strict"
 
     const autoIncrement = (function(){
@@ -104,33 +104,48 @@ const Cartao = (function($, _){
         return cartao
     }
 
-    function _decideTipoCartao(conteudo){
-        let numeroDeQuebrasDeLinha = conteudo.split("<br>").length
-        let totalDeLetras = conteudo.replace(/<br>/g, " ").length
+    function _render(cartao, state){
+        function _decideTipoCartao(conteudo){
+            let numeroDeQuebrasDeLinha = conteudo.split("<br>").length
+            let totalDeLetras = conteudo.replace(/<br>/g, " ").length
 
-        let tamMaiorPalavra = conteudo.replace(/<br>/g, " ")
-                            .split(" ")
-                            .reduce(function(anterior, palavra){
-                                if(palavra.length > anterior.length) {
-                                    return palavra
-                                }
-                                return anterior
-                            }).length
+            let tamMaiorPalavra = conteudo.replace(/<br>/g, " ")
+                                .split(" ")
+                                .reduce(function(anterior, palavra){
+                                    if(palavra.length > anterior.length) {
+                                        return palavra
+                                    }
+                                    return anterior
+                                }).length
 
-        var tipoCartao
+            var tipoCartao
 
-        if(tamMaiorPalavra < 9 && numeroDeQuebrasDeLinha < 5 && totalDeLetras < 55) {
-            tipoCartao = "cartao--textoGrande"
-        } else if(tamMaiorPalavra < 12 && numeroDeQuebrasDeLinha < 6 && totalDeLetras < 75) {
-            tipoCartao = "cartao--textoMedio"
-        } else {
-            tipoCartao = "cartao--textoPequeno"
+            if(tamMaiorPalavra < 9 && numeroDeQuebrasDeLinha < 5 && totalDeLetras < 55) {
+                tipoCartao = "cartao--textoGrande"
+            } else if(tamMaiorPalavra < 12 && numeroDeQuebrasDeLinha < 6 && totalDeLetras < 75) {
+                tipoCartao = "cartao--textoMedio"
+            } else {
+                tipoCartao = "cartao--textoPequeno"
+            }
+
+            return tipoCartao
         }
 
-        return tipoCartao
-    }
+        function cartaoEstaNaTela ($cartao) {
+            if (typeof jQuery === "function" && $cartao instanceof jQuery) {
+                $cartao = $cartao[0]
+            }
 
-    function _render(cartao, state){
+            let rect = $cartao.getBoundingClientRect()
+
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+            )
+        }
+
         let $cartao = $("<div>")
                         .attr("tabindex", 0)
                         .addClass("cartao")
@@ -158,7 +173,7 @@ const Cartao = (function($, _){
             })
             .on("focusin", function(){
                 $cartao.addClass("cartao--keyboardNavigationEnabled")
-                if(!_.estaNaTela($cartao)){
+                if(!cartaoEstaNaTela($cartao)){
                     $cartao[0].scrollIntoView({
                         behavior: "smooth",
                         block: "start"
@@ -193,4 +208,4 @@ const Cartao = (function($, _){
     }
 
     return Cartao
-})(jQuery, _)
+})(jQuery, $Cartao_Opcoes, $Cartao_Conteudo)

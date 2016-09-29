@@ -21,7 +21,7 @@
 
 	$(".novoCartao-conteudo").on("focus", function(){
 		let $campoConteudo = $(this)
-		let tagsAntigas = _.extraiTags($campoConteudo.val())
+		let tagsAntigas = Tags.extraiTags($campoConteudo.val())
 		let tagsToRemoveRegex = $campoConteudo.val().split(/[\s\n]/).filter(function(palavra){
 			return palavra && tagsAntigas.indexOf(palavra) >= 0
 		}).join("|")
@@ -31,4 +31,4 @@
 		},"")
 		$campoConteudo.val(tags && (txt + "\n" + tags))
 	})
-})(jQuery, Mural, Cartao)
+})(jQuery, Mural, Cartao, Tags)
