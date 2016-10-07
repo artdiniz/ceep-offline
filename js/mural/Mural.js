@@ -6,7 +6,7 @@ const Mural = (function(_render, Filtro, LoginUsuario){
     Filtro.on("filtrado", render)
 
     function adiciona(cartao){
-        if(LoginUsuario.logado){
+        if(LoginUsuario.logado()){
             cartoes.push(cartao)
             cartao.on("mudanca.**", render)
             render()
