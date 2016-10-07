@@ -15,6 +15,12 @@ body {
   background: #0082C7;
 }
 
+:focus {
+  outline-color: #3b99fc;
+  outline-style: solid;
+  outline-width: 3px;
+}
+
 #mudaLayout {
   display: none;
 }

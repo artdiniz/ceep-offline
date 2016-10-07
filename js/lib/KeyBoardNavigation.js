@@ -24,22 +24,19 @@ let KeyBoardNavigation = function(keyMap){
 
         let iterator = Object.create({}, {
             "next": {
-                configurable: false
-                ,value: function(){
+                value: function(){
                     currentIndexPosition++
                     return index[Math.abs(currentIndexPosition)%index.length]
                 }
             }
             ,"previous": {
-                configurable: false
-                ,value: function(){
+                value: function(){
                     currentIndexPosition = (currentIndexPosition + (index.length - 1)) % index.length
                     return index[Math.abs(currentIndexPosition)%index.length]
                 }
             }
             ,"current": {
-                configurable: false
-                ,value: function(){
+                value: function(){
                     return index[currentIndexPosition]
                 }
             }
@@ -47,21 +44,25 @@ let KeyBoardNavigation = function(keyMap){
 
         return Object.create({}, {
             "push": {
-                configurable: false
-                ,value: function(element){
+                value: function(element){
                     index.push(element)
                 }
             }
             ,"init": {
-                configurable: false
-                ,value: function(){
-                    currentIndexPosition = -1
-                    return iterator.next()
+                value: function(){
+                    if(currentIndexPosition === -1){
+                        currentIndexPosition = 0
+                    }
+                    return iterator.current()
+                }
+            }
+            ,"goTo": {
+                value: function(searchFunction){
+                    currentIndexPosition = index.indexOf(index.find(searchFunction))
                 }
             }
             ,"navigate": {
-                configurable: false
-                ,value: function(keyboardEvent){
+                value: function(keyboardEvent){
                     if(keyboardEvent.defaultPrevented){
                         return null
                     }

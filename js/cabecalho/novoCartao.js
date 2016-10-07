@@ -20,7 +20,7 @@
 			return palavra && tagsAntigas.indexOf(palavra) >= 0
 		}).join("|")
 		let txt = $campoConteudo.val().replace(new RegExp(tagsToRemoveRegex,"g"), "").trim()
-		let tags = Busca.tags().reduce(function(txt,tag){
+		let tags = Busca.tags.reduce(function(txt,tag){
 			return txt + "\n" + tag
 		},"")
 		$campoConteudo.val(tags && (txt + "\n" + tags))

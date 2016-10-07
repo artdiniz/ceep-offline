@@ -14,6 +14,7 @@
 	height: 2em;
 	width: 2em;
 	text-indent: -99999px;
+	overflow: hidden;
 	text-align: center;
 	box-sizing: border-box;
 	border-radius: 50%;
@@ -25,29 +26,33 @@
 	background-repeat: no-repeat;
 }
 
-.opcoesDoCartao-opcao + .opcoesDoCartao-opcao {
-	margin-left: .5em;
+.opcoesDoCartao-opcao:first-child {
+	margin-right: .5em;
+}
+
+.opcoesDoCartao-fecha {
+	background-image: url("../img/close.svg");
 }
 
 .opcoesDoCartao-remove {
-	background-image: url("../img/close.svg");
+	background-image: url("../img/bin2.svg");
 }
 
 .opcoesDoCartao-edita {
 	background-image: url("../img/edit.svg");
 }
 
-.opcoesDoCartao-radioCor{
+.opcoesDoCartao-radioTipo{
 	display: none;
 }
 
-.opcoesDoCartao-cor {
+.opcoesDoCartao-tipo {
 	background: currentcolor;
 	border-color: rgba(0,0,0,.5);
 	box-sizing: border-box;
 }
 
-.opcoesDoCartao-radioCor:checked + .opcoesDoCartao-cor {
+.opcoesDoCartao-radioTipo:checked + .opcoesDoCartao-tipo {
 	background: currentcolor;
 	border: 5px solid rgba(0,0,0,.5);
 }
