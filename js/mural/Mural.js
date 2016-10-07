@@ -1,4 +1,4 @@
-const Mural = (function(_render, Filtro){
+const Mural = (function(_render, Filtro, LoginUsuario){
     "use strict"
     let cartoes = []
     const render = () => _render({cartoes: cartoes, filtro: Filtro.tagsETexto});
@@ -6,7 +6,7 @@ const Mural = (function(_render, Filtro){
     Filtro.on("filtrado", render)
 
     function adiciona(cartao){
-        if(logado){
+        if(LoginUsuario.logado()){
             cartoes.push(cartao)
             cartao.on("mudanca.**", render)
             cartao.on("remocao", ()=>{
@@ -25,4 +25,4 @@ const Mural = (function(_render, Filtro){
         adiciona
     })
 
-})(Mural_render, Filtro)
+})(Mural_render, Filtro, LoginUsuario)

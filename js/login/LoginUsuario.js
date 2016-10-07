@@ -1,17 +1,26 @@
-let logado = JSON.parse(localStorage.getItem("logado"))
+const LoginUsuario = (function(){
 
-LoginUsuario_render({
-    logado: logado
-    ,usuario: localStorage.getItem("nomeUsuario")
-    ,onLogin: (nomeUsuario) => {
-        logado = true
-        localStorage.setItem("logado", true)
-        localStorage.setItem("nomeUsuario", nomeUsuario)
-        
+    let logado = !!localStorage.getItem("logado")
+    let usuario = localStorage.getItem("usuario")
+
+    LoginUsuario_render({
+        logado: logado
+        ,usuario: usuario
+        ,onLogin: (novoUsuario) =>{
+            logado = true
+            localStorage.setItem("logado", true)
+            usuario =  novoUsuario
+            localStorage.setItem("usuario", novoUsuario)
+        }
+        ,onLogout: () => {
+            logado = false
+            localStorage.removeItem("logado")
+            localStorage.removeItem("usuario")
+        }
+    })
+
+    return {
+        logado: () => logado
     }
-    ,onLogout: () => {
-        logado = false
-        localStorage.setItem("logado", false)
-        localStorage.removeItem("nomeUsuario")
-    }
-})
+
+})()
