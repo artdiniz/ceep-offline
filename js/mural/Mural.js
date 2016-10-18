@@ -18,6 +18,7 @@ const Mural = (function(_render, Filtro, LoginUsuario){
             return true
         } else {
             alert("Você não está logado")
+            return false
         }
     }
 
