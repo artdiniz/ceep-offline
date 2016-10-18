@@ -4,30 +4,35 @@ const Mural_render = (function($){
     let currentCartoes = [];
 
     return function render({cartoes, filtro = (() => true)}){
-        const cartoesVisiveis = currentCartoes.filter(cartao => !cartao.getState().deletado)
-        const cartoesDeletados = currentCartoes.filter(cartao => cartao.getState().deletado)
-        currentCartoes = cartoes
+        const cartoesDeletados = currentCartoes.filter(cartao => !(cartoes.indexOf(cartao)+1))
 
-        cartoesDeletados.forEach(cartao => {
-            const $cartao = cartao.node
-            $cartao.addClass("cartao--some")
-            setTimeout(function(){
+        const deletaCartoes = Promise.all(cartoesDeletados.map(cartao => {
+            return new Promise(resolve => {
+                cartao.node.addClass("cartao--some")
+                setInterval(() => {
+                    cartao.node.remove()
+                    resolve()
+                }, 400)
+            })
+        }))
+
+        deletaCartoes.then(() => {
+            const cartoesVisiveis = cartoes.filter(filtro)
+
+            currentCartoes
+            .forEach(cartao => {
+                const $cartao = cartao.node
                 $cartao.detach()
-            }, 400)
+            })
+
+            cartoesVisiveis
+            .forEach(cartao => {
+                const $cartao = cartao.node
+                $cartao.appendTo($mural)
+            })
+
+            currentCartoes = cartoes
         })
 
-        cartoesVisiveis
-        .forEach(cartao => {
-            const $cartao = cartao.node
-            $cartao.detach()
-            $cartao.removeClass("cartao--some")
-        })
-
-        cartoesVisiveis
-        .filter(filtro)
-        .forEach(cartao => {
-            const $cartao = cartao.node
-            $cartao.appendTo($mural)
-        })
     }
 })(jQuery)

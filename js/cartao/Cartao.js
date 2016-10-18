@@ -20,92 +20,76 @@ const Cartao = (function(_render, EventEmitter){
     function Cartao(conteudo, tipo = globalProps.tipos.padrao){
 
         const render = _render(globalProps)
-        function renderOnFinish(fn){
+        function renderAfter(fn){
             return function(){
                 fn.apply(this, arguments)
                 render(props, state, handlers)
             }
         }
 
-        let props = Object.freeze({
+        const props = Object.freeze({
             id: autoIncrement()
-            ,conteudo
-            ,tipo
         })
 
-        function setProp(name, value){
-            const novoProps = {
-                "conteudo": ((conteudo) => {
-                    conteudo = conteudo
-                                .replace(/\n/g, "<br>")
-                                .replace(/\*\*([^\*][^\*]*)\*\*/g, "<b>$1</b>")
-                                .replace(/\*([^\*]*)\*/g, "<em>$1</em>")
-                    return conteudo
-                })(name === "conteudo" && value || props.conteudo)
-                ,"tipo": ((tipo) => {
-                    return tipo
-                })(name === "tipo" && value || props.tipo)
-            }
+        let state
 
-            props = Object.freeze({id: props.id, conteudo: novoProps.conteudo, tipo: novoProps.tipo})
+        function setState({conteudo = state.conteudo, tipo = state.tipo, navegavel, editavel, deletado = state.deletado, focado}){
+            navegavel = !!navegavel
+            editavel = !!editavel
+            deletado = !!deletado
+            focado = !!focado
+            state = Object.freeze({conteudo, tipo, navegavel, editavel, deletado, focado})
         }
 
-        let state = Object.freeze({
-            deletado: false
+        setState({
+            conteudo
+            ,tipo
+            ,deletado: false
             ,editavel: false
             ,navegavel: false
             ,focado: false
         })
 
-        function setState({navegavel, editavel, deletado, focado}){
-            state = Object.freeze({navegavel, editavel, deletado, focado})
-        }
-
         const handlers = {
-            "onNavegacaoInicia": renderOnFinish(() => {
-                setState({navegavel: true, editavel: false, deletado: state.deletado, focado: false})
+            "onNavegacaoInicia": renderAfter(() => {
+                setState({navegavel: true, editavel: false, focado: false})
             })
-            ,"onNavegacaoTermina": renderOnFinish(() => {
+            ,"onNavegacaoTermina": renderAfter(() => {
                 if(state.navegavel){
-                    setState({navegavel: false, editavel: false, deletado: state.deletado, focado: true})
+                    setState({navegavel: false, editavel: false, focado: true})
                 } else {
-                    setState({navegavel: false, editavel: false, deletado: state.deletado, focado: false})
+                    setState({navegavel: false, editavel: false, focado: false})
                 }
             })
-            ,"onMudancaDeTipo": renderOnFinish((tipo) => {
-                setProp("tipo", tipo)
-                setState({navegavel: true, editavel: false, deletado: state.deletado, focado: false})
-                cartao.emit("mudanca.props.tipo")
+            ,"onMudancaDeTipo": renderAfter((tipo) => {
+                setState({tipo: tipo, navegavel: true, editavel: false, focado: false})
+                cartao.emit("mudanca.tipo")
             })
-            ,"onEdicaoCompleta": renderOnFinish((conteudo) => {
-                setProp("conteudo", conteudo)
-                setState({navegavel: true, editavel: false, deletado: state.deletado, focado: false})
-                cartao.emit("mudanca.props.conteudo")
+            ,"onEdicaoCompleta": renderAfter((conteudo) => {
+                setState({conteudo: conteudo, navegavel: true, editavel: false, focado: false})
+                cartao.emit("mudanca.conteudo")
             })
-            ,"onDeleta": renderOnFinish(() => {
+            ,"onDeleta": renderAfter(() => {
                 setState({navegavel: false, editavel: false, deletado: true, focado: false})
-                cartao.emit("mudanca.state.deletado")
+                cartao.emit("remocao")
             })
-            ,"onAtivaEdicao": renderOnFinish(() => {
-                setState({navegavel: true, editavel: true, deletado: state.deletado, focado: false})
+            ,"onAtivaEdicao": renderAfter(() => {
+                setState({navegavel: true, editavel: true, focado: false})
             })
         }
 
         const cartao = Object.create(new EventEmitter({wildcard: true}), {
            "id": {
-               get: () => props.id
+               value: props.id
            }
            ,"conteudo": {
-               get: () => props.conteudo
+               get: () => state.conteudo
            }
            ,"tipo": {
-               get: () => props.tipo
+               get: () => state.tipo
            }
            ,"node": {
                value: render(props, state, handlers)
-           }
-           ,"getState": {
-               value: () => state
            }
         })
 

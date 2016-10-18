@@ -5,24 +5,22 @@ const Cartao_render = (function($, CartaoOpcoes_render, CartaoConteudo_render, h
         const opcoes_render = CartaoOpcoes_render(globalProps)
         const coteudo_render = CartaoConteudo_render(globalProps)
 
-        const $opcoes = opcoes_render()
-        const $conteudo = coteudo_render()
-
-        $cartao
-            .append($opcoes)
-            .append($conteudo)
-
         return function(props = {}, state = {}, handlers = {}){
-            opcoes_render(props, state, handlers)
-            coteudo_render(props, state, handlers)
+            const $opcoes = opcoes_render(props, state, handlers)
+            const $conteudo = coteudo_render(props, state, handlers)
+
+            !$cartao.children().length && $cartao.append($opcoes, $conteudo)
 
             $cartao
                 .removeClass("cartao--textoPequeno cartao--textoGrande cartao--textoMedio")
-                .addClass(helpers.decideTipoCartao(props.conteudo))
                 .addClass("cartao")
-                .css("background-color", props.tipo.cor)
+                .css("background-color", state.tipo.cor)
                 .removeClass("cartao--keyboardNavigationEnabled")
                 .attr("tabindex", !state.navegavel ? 0 : -1)
+
+            if(!state.editavel){
+                $cartao.addClass(helpers.decideTamanhoDoCartao(state.conteudo))
+            }
 
             if(state.navegavel){
                 $cartao.addClass("cartao--keyboardNavigationEnabled")

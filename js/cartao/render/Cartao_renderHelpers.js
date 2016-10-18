@@ -1,9 +1,9 @@
 const Cartao_renderHelpers = (function($){
-    function decideTipoCartao(conteudo){
-        let numeroDeQuebrasDeLinha = conteudo.split("<br>").length
-        let totalDeLetras = conteudo.replace(/<br>/g, " ").length
+    function decideTamanhoDoCartao(conteudo){
+        let numeroDeQuebrasDeLinha = conteudo.split("\n").length
+        let totalDeLetras = conteudo.replace(/\n/g, " ").length
 
-        let tamMaiorPalavra = conteudo.replace(/<br>/g, " ")
+        let tamMaiorPalavra = conteudo.replace(/\n/g, " ")
                             .split(" ")
                             .reduce(function(anterior, palavra){
                                 if(palavra.length > anterior.length) {
@@ -41,7 +41,7 @@ const Cartao_renderHelpers = (function($){
     }
 
     return {
-        decideTipoCartao
+        decideTamanhoDoCartao
         ,cartaoEstaNaTela
     }
 })(jQuery)

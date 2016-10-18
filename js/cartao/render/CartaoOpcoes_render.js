@@ -1,9 +1,7 @@
 const CartaoOpcoes_render = (function($){
     "use strict"
-    const Navigation = new KeyBoardNavigation({
-        "Enter": iterator => null
-        ," ": iterator => null
-        ,"ArrowLeft": iterator => iterator.previous()
+    const OpcoesKeyboardNavigation = new KeyBoardNavigation({
+        "ArrowLeft": iterator => iterator.previous()
         ,"ArrowUp": iterator => iterator.previous()
         ,"ArrowRight": iterator => iterator.next()
         ,"ArrowDown": iterator => iterator.next()
@@ -24,7 +22,7 @@ const CartaoOpcoes_render = (function($){
     }
 
     return function(globalProps){
-        const keyboardNavigation = new Navigation()
+        const keyboardNavigation = new OpcoesKeyboardNavigation()
 
         const $opcoes = $("<div>")
                             .addClass("opcoesDoCartao")
@@ -78,7 +76,7 @@ const CartaoOpcoes_render = (function($){
                     .attr("name", "tipoDoCartao-" + props.id)
                     .attr("id", idInputTipo)
                     .prop("checked", false)
-                    .prop("checked", props.tipo === tipos[indice])
+                    .prop("checked", state.tipo === tipos[indice])
 
                 $labelTipo
                     .attr("for", idInputTipo)
@@ -125,9 +123,8 @@ const CartaoOpcoes_render = (function($){
                         $(this).trigger("click")
                     }
                 })
-                .on("focusin", ".opcoesDoCartao-opcao", function(event){
+                .on("focusin click", ".opcoesDoCartao-opcao", function(event){
                     ultimaOpcaoNavegada = $(event.target)
-                    handlers.onNavegacaoInicia
                 })
                 .on("change", ".opcoesDoCartao-radioTipo", function(event){
                     let numeroTipo = $(event.target).val()
