@@ -6,15 +6,10 @@ const Mural = (function(_render, Filtro){
     Filtro.on("filtrado", render)
 
     function adiciona(cartao){
-        if(logado){
-            cartoes.push(cartao)
-            cartao.on("mudanca.**", render)
-            render()
-            return true
-        } else {
-            alert("Você não está logado")
-        }
-
+        cartoes.push(cartao)
+        cartao.on("mudanca.**", render)
+        render()
+        return true
     }
 
     return Object.seal({
