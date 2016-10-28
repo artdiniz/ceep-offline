@@ -1,4 +1,4 @@
-const Cartao = (function(_render, EventEmitter){
+const Cartao = (function(_render, EventEmitter, TiposCartao){
     "use strict"
 
     const autoIncrement = (function(){
@@ -9,12 +9,7 @@ const Cartao = (function(_render, EventEmitter){
     })()
 
     const globalProps = {
-        tipos: {
-             padrao: {nome: "Padrão", cor: "#EBEF40"}
-            ,importante: {nome: "Importante", cor: "#F05450"}
-            ,tarefa: {nome: "Tarefa", cor: "#92C4EC"}
-            ,inspiracao: {nome: "Inspiração", cor: "#76EF40"}
-        }
+        tipos: TiposCartao
     }
 
     function Cartao(conteudo, tipo = globalProps.tipos.padrao){
@@ -81,12 +76,15 @@ const Cartao = (function(_render, EventEmitter){
         const cartao = Object.create(new EventEmitter({wildcard: true}), {
            "id": {
                value: props.id
+               ,enumerable: true
            }
            ,"conteudo": {
                get: () => state.conteudo
+               ,enumerable: true
            }
            ,"tipo": {
                get: () => state.tipo
+               ,enumerable: true
            }
            ,"node": {
                value: render(props, state, handlers)
@@ -97,4 +95,4 @@ const Cartao = (function(_render, EventEmitter){
     }
 
     return Cartao
-})(Cartao_render, EventEmitter2)
+})(Cartao_render, EventEmitter2, TiposCartao)

@@ -39,6 +39,10 @@
 	overflow: hidden;
 }
 
+.cartao-conteudo img {
+	width: 100%;
+}
+
 .cartao:focus .cartao-conteudo,
 .cartao-conteudo:focus {
 	overflow: auto;

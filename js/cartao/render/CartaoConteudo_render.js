@@ -11,6 +11,7 @@ const CartaoConteudo_render = (function($){
     return function(globalProps){
         let $conteudo = $("<p>")
 
+
         return function(props = {}, state = {}, handlers = {}){
 
             let conteudo = state.conteudo
@@ -20,8 +21,10 @@ const CartaoConteudo_render = (function($){
                 conteudo = conteudo
                              .replace(/<b>(.*?)<\/b>/g, "**$1**")
                              .replace(/<em>(.*?)<\/em>/g, "*$1*")
+                             .replace(/<img src='(.*?)' alt='(.*?)'>/g, "![$2]($1)")
             } else {
                 conteudo = conteudo
+                             .replace(/\!\[(.*?)\]\((.*?)\)/g,"<img src='$2' alt='$1'>")
                              .replace(/\*\*([^\*][^\*]*)\*\*/g, "<b>$1</b>")
                              .replace(/\*([^\*]*)\*/g, "<em>$1</em>")
             }
@@ -42,7 +45,11 @@ const CartaoConteudo_render = (function($){
                     $(this).trigger("edicaoCompleta")
                 })
                 .on("edicaoCompleta", function(){
-                    handlers.onEdicaoCompleta($conteudo.html().replace(/<br>/g, "\n"))
+                    handlers.onEdicaoCompleta(
+                        $conteudo.html()
+                             .replace(/<br>/g, "\n")
+                             .replace(/<.*?>/g,"")
+                    )
                 })
 
             if(state.editavel){
