@@ -48,6 +48,7 @@ const Mural = (function(_render, Filtro, LoginUsuario, TiposCartao){
                 salvaCartoes()
                 render()
             })
+            salvaCartoes()
             render()
             return true
         } else {
