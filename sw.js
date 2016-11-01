@@ -2,7 +2,8 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open("ceep-v1").then(function(cache){
       return cache.addAll([
-        "css/estilos.css"
+        "/"
+        ,"css/estilos.css"
         ,"css/opcoesDaPagina.css"
         ,"css/opcoesDoCartao.css"
         ,"css/cabecalho.css"
