@@ -1,4 +1,4 @@
-const cacheVersion = 16
+const cacheVersion = 17
 const cachedFileNames = [
   "./"
   ,"./css/estilos.css"

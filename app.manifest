@@ -1,0 +1,17 @@
+{
+  "name": "Ceep Mural de Notas",
+  "short_name": "Ceep",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F05450",
+  "theme_color": "#F05450",
+  "description": "Adicone notas no seu muralzim",
+  "icons": [{
+    "src": "img/rolo.png",
+    "sizes": "180x180",
+    "type": "image/png"
+  }],
+  "related_applications": [{
+    "platform": "web"
+  }]
+}
