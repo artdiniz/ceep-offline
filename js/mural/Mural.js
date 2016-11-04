@@ -1,13 +1,10 @@
 const Mural = (function(_render, Filtro, LoginUsuario, TiposCartao){
     "use strict"
-    let cartoes = []
-
+    let cartoes = pegaCartoesUsuario()
     const render = () => _render({cartoes: cartoes, filtro: Filtro.tagsETexto})
-    Filtro.on("filtrado", render)
 
-    pegaCartoesUsuario().forEach(adiciona)
-
-    Filtro.on("filtrado", render)
+    cartoes.forEach(preparaCartao)
+    render()
 
     function pegaCartoesUsuario(){
         if(LoginUsuario.logado()){
@@ -21,14 +18,43 @@ const Mural = (function(_render, Filtro, LoginUsuario, TiposCartao){
         return []
     }
 
+    function preparaCartao(cartao){
+        cartao.on("mudanca.**", render)
+        cartao.on("mudanca.**", salvaCartoes)
+        cartao.on("mudanca.conteudo", () => {
+            const imagens = Cartao.pegaImagens(cartao)
+            cacheiaImagens(imagens)
+        })
+        cartao.on("remocao", ()=>{
+            cartoes = cartoes.slice(0)
+            cartoes.splice(cartoes.indexOf(cartao),1)
+            salvaCartoes()
+            render()
+        })
+        cacheiaImagens(Cartao.pegaImagens(cartao))
+    }
+
     function salvaCartoes (){
         localStorage.setItem(LoginUsuario.usuario(), JSON.stringify(
             cartoes.map(cartao => ({conteudo: cartao.conteudo, tipo: Object.keys(TiposCartao).map(key => TiposCartao[key]).indexOf(cartao.tipo)}))
         ))
     }
 
+    function cacheiaImagens(imagens){
+        if(imagens){
+            imagens
+                .map(img => new Request(img, {mode: 'no-cors'}))
+                .forEach(request => {
+                    fetch(request).then(response => caches.open("ceep-images").then(function(cache){
+                        return cache.put(request, response)
+                    }))
+                })
+        }
+    }
+
     LoginUsuario.on("login", ()=>{
-        pegaCartoesUsuario().forEach(adiciona)
+        cartoes = pegaCartoesUsuario()
+        cartoes.forEach(preparaCartao)
         render()
     })
 
@@ -40,14 +66,7 @@ const Mural = (function(_render, Filtro, LoginUsuario, TiposCartao){
     function adiciona(cartao){
         if(LoginUsuario.logado()){
             cartoes.push(cartao)
-            cartao.on("mudanca.**", render)
-            cartao.on("mudanca.**", salvaCartoes)
-            cartao.on("remocao", ()=>{
-                cartoes = cartoes.slice(0)
-                cartoes.splice(cartoes.indexOf(cartao),1)
-                salvaCartoes()
-                render()
-            })
+            preparaCartao(cartao)
             salvaCartoes()
             render()
             return true
@@ -57,10 +76,11 @@ const Mural = (function(_render, Filtro, LoginUsuario, TiposCartao){
         }
     }
 
+    Filtro.on("filtrado", render)
+
     return Object.seal({
         adiciona
     })
-
 
 })(Mural_render, Filtro, LoginUsuario, TiposCartao)
 

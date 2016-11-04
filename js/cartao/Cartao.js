@@ -29,16 +29,6 @@ const Cartao = (function(_render, EventEmitter, TiposCartao){
         let state
 
         function setState({conteudo = state.conteudo, tipo = state.tipo, navegavel, editavel, deletado = state.deletado, focado}){
-            const imageURL = conteudo.match(/\!\[(.+?)\]\((.+?)\)/) && conteudo.match(/\!\[(.+?)\]\((.+?)\)/)[2]
-            if(imageURL){
-                fetch(new Request(imageURL, {mode: 'no-cors'})).then(function(response){
-                    caches.open("ceep-v1").then(function(cache){
-                        return cache.put(imageURL, response)
-                    }).then(function(){
-                        console.log("cacheei")
-                    })
-                })
-            }
             navegavel = !!navegavel
             editavel = !!editavel
             deletado = !!deletado
@@ -71,8 +61,9 @@ const Cartao = (function(_render, EventEmitter, TiposCartao){
                 cartao.emit("mudanca.tipo")
             })
             ,"onEdicaoCompleta": renderAfter((conteudo) => {
+                const conteudoAntigo = state.conteudo
                 setState({conteudo: conteudo, navegavel: true, editavel: false, focado: false})
-                cartao.emit("mudanca.conteudo")
+                cartao.emit("mudanca.conteudo", conteudo, conteudoAntigo)
             })
             ,"onDeleta": renderAfter(() => {
                 setState({navegavel: false, editavel: false, deletado: true, focado: false})
@@ -102,6 +93,12 @@ const Cartao = (function(_render, EventEmitter, TiposCartao){
         })
 
         return cartao
+    }
+
+    Cartao.pegaImagens = cartao => {
+        return (cartao.conteudo.match(/\!\[(.+?)\]\((.+?)\)/g) || []).map(imagemMD => {
+            return imagemMD.match(/\!\[.+?\]\((.+?)\)/)[1] || null
+        })
     }
 
     return Cartao
