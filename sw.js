@@ -1,4 +1,4 @@
-const cacheVersion = 17
+const cacheVersion = 1
 const cachedFileNames = [
   "./"
   ,"./css/estilos.css"
@@ -46,7 +46,7 @@ self.addEventListener('activate', function(event){
   caches.keys().then(cacheNamesList => Promise.all(cacheNamesList.map(cacheName => {
     const cacheRegExp = cacheName.match(/ceep-v(\d+)/)
     const oldCacheVersion = parseInt(cacheRegExp && cacheRegExp[1])
-    if(oldCacheVersion && oldCacheVersion < cacheVersion){
+    if(oldCacheVersion && oldCacheVersion != cacheVersion){
       return caches.delete(cacheName)
     }
   })))
