@@ -7,8 +7,24 @@
   "theme_color": "#F05450",
   "description": "Adicone notas no seu muralzim",
   "icons": [{
-    "src": "img/caelum-logo.svg"
-    ,"sizes": "any"
-    ,"type": "image/svg"
-  }]
+    "src": "img/caelum-logo-32.png"
+    ,"sizes": "32x32"
+    ,"type": "image/png"
+  }
+  ,{
+    "src": "img/caelum-logo-64.png"
+    ,"sizes": "64x64"
+    ,"type": "image/png"
+  }
+  ,{
+    "src": "img/caelum-logo-128.png"
+    ,"sizes": "128x128"
+    ,"type": "image/png"
+  }
+  ,{
+    "src": "img/caelum-logo-256.png"
+    ,"sizes": "256x256"
+    ,"type": "image/png"
+  }
+  ]
 }
