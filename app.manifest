@@ -7,8 +7,8 @@
   "theme_color": "#F05450",
   "description": "Adicone notas no seu muralzim",
   "icons": [{
-    "src": "img/rolo.png",
-    "sizes": "180x180",
-    "type": "image/png"
+    "src": "img/caelum-logo.svg"
+    ,"sizes": "any"
+    ,"type": "image/svg"
   }]
 }
