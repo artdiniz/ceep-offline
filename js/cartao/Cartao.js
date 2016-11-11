@@ -17,8 +17,12 @@ const Cartao = (function(_render, EventEmitter, TiposCartao){
         const render = _render(globalProps)
         function renderAfter(fn){
             return function(){
-                fn.apply(this, arguments)
-                render(props, state, handlers)
+                let result = fn.apply(this, arguments)
+                if (result instanceof Promise){
+                    result.then(()=> render(props, state, handlers))
+                } else {
+                    render(props, state, handlers)
+                }
             }
         }
 
@@ -50,24 +54,23 @@ const Cartao = (function(_render, EventEmitter, TiposCartao){
                 setState({navegavel: true, editavel: false, focado: false})
             })
             ,"onNavegacaoTermina": renderAfter(() => {
-                if(state.navegavel){
-                    setState({navegavel: false, editavel: false, focado: true})
-                } else {
-                    setState({navegavel: false, editavel: false, focado: false})
-                }
+                setState({navegavel: false, editavel: false, focado: true})
+            })
+            ,"onDesseleciona": renderAfter(() => {
+                setState({navegavel: false, editavel: false, focado: false})
             })
             ,"onMudancaDeTipo": renderAfter((tipo) => {
                 setState({tipo: tipo, navegavel: true, editavel: false, focado: false})
-                cartao.emit("mudanca.tipo")
+                return cartao.emitAsync("mudanca.tipo")
             })
             ,"onEdicaoCompleta": renderAfter((conteudo) => {
                 const conteudoAntigo = state.conteudo
                 setState({conteudo: conteudo, navegavel: true, editavel: false, focado: false})
-                cartao.emit("mudanca.conteudo", conteudo, conteudoAntigo)
+                return cartao.emitAsync("mudanca.conteudo", conteudo, conteudoAntigo)
             })
             ,"onDeleta": renderAfter(() => {
                 setState({navegavel: false, editavel: false, deletado: true, focado: false})
-                cartao.emit("remocao")
+                return cartao.emitAsync("remocao")
             })
             ,"onAtivaEdicao": renderAfter(() => {
                 setState({navegavel: true, editavel: true, focado: false})
@@ -77,15 +80,12 @@ const Cartao = (function(_render, EventEmitter, TiposCartao){
         const cartao = Object.create(new EventEmitter({wildcard: true}), {
            "id": {
                value: props.id
-               ,enumerable: true
            }
            ,"conteudo": {
                get: () => state.conteudo
-               ,enumerable: true
            }
            ,"tipo": {
                get: () => state.tipo
-               ,enumerable: true
            }
            ,"node": {
                value: render(props, state, handlers)

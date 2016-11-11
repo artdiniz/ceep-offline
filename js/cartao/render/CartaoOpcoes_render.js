@@ -97,6 +97,9 @@ const CartaoOpcoes_render = (function($){
                 .on("click", () => {
                     handlers.onAtivaEdicao()
                 })
+                .on('keydown', event => {
+                    event.preventDefault()
+                })
 
             if(ultimaOpcaoNavegada){
                 keyboardNavigation.goTo((elementoNavegacao)=> {
@@ -110,21 +113,37 @@ const CartaoOpcoes_render = (function($){
                 })
             }
 
-            if(state.navegavel){
+            if(state.navegavel && !state.editavel){
                 keyboardNavigation.init()[0].focus()
-            } else {
+            } else if(!state.navegavel){
                 ultimaOpcaoNavegada = undefined
             }
 
             $opcoes
                 .off()
-                .on("keydown", ".opcoesDoCartao-opcao", function(event){
-                    if(event.key === "Enter" || event.key === " "){
-                        $(this).trigger("click")
+                .on("keydown", function(event){
+                    if(event.key === "Escape"){
+                        event.preventDefault()
+                        event.stopPropagation()
+                        handlers.onNavegacaoTermina()
                     }
                 })
-                .on("focusin click", ".opcoesDoCartao-opcao", function(event){
-                    ultimaOpcaoNavegada = $(event.target)
+                .on("keydown", ".opcoesDoCartao-opcao", function(event){
+                    if(event.key === "Enter" || event.key === " "){
+                        $(event.target).trigger("click")
+                    }
+                })
+                .on("focusin", ".opcoesDoCartao-opcao", function(event){
+                    const $opcao = $(event.target)
+                    ultimaOpcaoNavegada = $opcao
+                    $opcao[0].focus()
+                })
+                .on("mouseenter", ".opcoesDoCartao-opcao", function(event){
+                    if(!state.editavel){
+                        const $opcao = $(event.target)
+                        ultimaOpcaoNavegada = $opcao
+                        $opcao[0].focus()
+                    }
                 })
                 .on("change", ".opcoesDoCartao-radioTipo", function(event){
                     let numeroTipo = $(event.target).val()

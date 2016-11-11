@@ -2,7 +2,7 @@
 	margin: 32px 16px;
 	padding: 16px;
 	line-height: 1.5;
-	overflow: show;
+	overflow: visible;
 	position: relative;
 	word-wrap: break-word;
 	font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
@@ -17,7 +17,6 @@
 }
 
 .cartao.cartao--keyboardNavigationEnabled,
-.cartao:hover,
 .cartao:focus {
 	transform: scale(1.1);
 }
@@ -27,7 +26,6 @@
 	transition: opacity .2s ease;
 }
 
-.cartao:hover .opcoesDoCartao-opcao,
 .cartao:focus .opcoesDoCartao-opcao,
 .cartao--keyboardNavigationEnabled .opcoesDoCartao-opcao{
 	opacity: 1;

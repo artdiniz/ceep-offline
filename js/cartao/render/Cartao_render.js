@@ -15,7 +15,7 @@ const Cartao_render = (function($, CartaoOpcoes_render, CartaoConteudo_render, h
                 .removeClass("cartao--textoPequeno cartao--textoGrande cartao--textoMedio")
                 .addClass("cartao")
                 .css("background-color", state.tipo.cor)
-                .removeClass("cartao--keyboardNavigationEnabled")
+                .toggleClass("cartao--keyboardNavigationEnabled", state.navegavel)
                 .attr("tabindex", !state.navegavel ? 0 : -1)
 
             if(!state.editavel){
@@ -23,7 +23,6 @@ const Cartao_render = (function($, CartaoOpcoes_render, CartaoConteudo_render, h
             }
 
             if(state.navegavel){
-                $cartao.addClass("cartao--keyboardNavigationEnabled")
                 if(!helpers.cartaoEstaNaTela($cartao)){
                     $cartao[0].scrollIntoView({
                         behavior: "smooth",
@@ -33,9 +32,9 @@ const Cartao_render = (function($, CartaoOpcoes_render, CartaoConteudo_render, h
             }
 
             if(state.focado){
-                $cartao.focus()
+                $cartao[0].focus()
             } else {
-                $cartao.blur()
+                $cartao[0].blur()
             }
 
             $cartao
@@ -47,17 +46,17 @@ const Cartao_render = (function($, CartaoOpcoes_render, CartaoConteudo_render, h
                             $(this).trigger("navegacaoInicia")
                         }
                     } else if(event.key === "Escape"){
-                        $(this).trigger("navegacaoTermina")
-                    }
-                })
-                .on("click", function(event){
-                    if(!state.navegavel){
-                        $(this).trigger("navegacaoInicia")
+                        $(this).trigger("desseleciona")
                     }
                 })
                 .on("mouseleave", function(){
                     if(!state.editavel){
-                        $(this).trigger("navegacaoTermina")
+                        $(this).trigger("desseleciona")
+                    }
+                })
+                .on("mouseenter", function(){
+                    if(!state.editavel){
+                        $(this).trigger("navegacaoInicia")
                     }
                 })
                 .on("navegacaoInicia", function(){
@@ -65,6 +64,9 @@ const Cartao_render = (function($, CartaoOpcoes_render, CartaoConteudo_render, h
                 })
                 .on("navegacaoTermina", function(){
                     handlers.onNavegacaoTermina()
+                })
+                .on("desseleciona", function(){
+                    handlers.onDesseleciona()
                 })
 
             return $cartao

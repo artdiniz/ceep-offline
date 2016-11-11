@@ -4,6 +4,7 @@ const CartaoConteudo_render = (function($){
     function _quebraLinhaComBR(event){
         if(event.keyCode == 13) {
             event.preventDefault()
+            event.stopPropagation()
             document.execCommand("insertHtml", false, "<br><br>")
         }
     }
@@ -14,8 +15,7 @@ const CartaoConteudo_render = (function($){
 
         return function(props = {}, state = {}, handlers = {}){
 
-            let conteudo = state.conteudo
-                             .replace(/\n/g, "<br>")
+            let conteudo = state.conteudo.replace(/\n/g, "<br>")
 
             if(state.editavel){
                 conteudo = conteudo
@@ -55,6 +55,7 @@ const CartaoConteudo_render = (function($){
             if(state.editavel){
                 $conteudo.focus()
             }
+
             return $conteudo
         }
     }

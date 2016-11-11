@@ -16,7 +16,7 @@ const Mural_render = (function($){
             })
         }))
 
-        deletaCartoes.then(() => {
+        return deletaCartoes.then(() => {
             const cartoesVisiveis = cartoes.filter(filtro)
 
             currentCartoes
